@@ -87,6 +87,29 @@ make all-tests   # both
 make clean
 ```
 
+## Example
+
+`make example` builds and runs [`examples/demo.sml`](examples/demo.sml), which
+captures a few records at different levels through an in-memory sink
+(showing threshold filtering and a `withFields` child logger), then applies
+`format`/`formatJson` and `parseLevel` directly (output is byte-identical
+under MLton and Poly/ML):
+
+```
+sml-log demo
+captured lines (Info threshold):
+  level=info msg=request method=GET path=/users
+  level=warn msg="slow query" ms=420
+  level=error msg=handled service=api req=42 status=500
+format/formatJson on a literal record:
+  format     = level=warn msg="disk almost full" pct=97
+  formatJson = {"level":"warn","msg":"disk almost full","fields":{"pct":"97"}}
+parseLevel:
+  parseLevel "debug" = debug
+  parseLevel "WARN" = warn
+  parseLevel "bogus" = NONE
+```
+
 ## Installing with smlpkg
 
 ```sh
